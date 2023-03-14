@@ -1,11 +1,44 @@
 AWSTemplateFormatVersion: "2010-09-09"
 Transform: AWS::Serverless-2016-10-31
+
 Parameters:
   microservice1StacknameAndEnvironment:
-    Description: Name of the stack to import resources from, in this case microservice1-demo- + which environment (dev or prod)
+    Description: Naam van de stack om resources van te importeren, in dit geval microservice1-demo- + welke omgeving (dev of prod)
     Type: String
     Default: !Join ["", ["microservice1-demo-", {"Fn::Select": [2, {"Fn::Split": ["-", {"Ref": "AWS::StackName"}]}]}]]
+
+Description: >
+  Multi-step component 2
+
 Resources:
+  StockTradingStateMachine:
+    Type: AWS::Serverless::StateMachine
+    Properties:
+      DefinitionUri: statemachine/stock_trader.asl.json
+      DefinitionSubstitutions:
+        StockCheckerFunctionArn: !ImportValue "${microservice1StacknameAndEnvironment}:StockCheckerFunctionArn"
+        StockSellerFunctionArn: !ImportValue "${microservice1StacknameAndEnvironment}:StockSellerFunctionArn"
+        StockBuyerFunctionArn: !ImportValue "${microservice1StacknameAndEnvironment}:StockBuyerFunctionArn"
+        DDBPutItem: !Sub "arn:${AWS::Partition}:states:::dynamodb:putItem"
+        DDBTable: !Ref TransactionTable
+      Events:
+        HourlyTradingSchedule:
+          Type: Schedule
+          Properties:
+            Description: Schema om de stock trading state machine elk uur uit te voeren
+            Enabled: False
+            Schedule: rate(1 minute)
+      Policies:
+        - Statement:
+            Effect: Allow
+            Action: lambda:InvokeFunction
+            Resource:
+              - !ImportValue "${microservice1StacknameAndEnvironment}:StockCheckerFunctionArn"
+              - !ImportValue "${microservice1StacknameAndEnvironment}:StockSellerFunctionArn"
+              - !ImportValue "${microservice1StacknameAndEnvironment}:StockBuyerFunctionArn"
+        - DynamoDBWritePolicy:
+            TableName: !Ref TransactionTable
+
   TransactionTable:
     Type: AWS::Serverless::SimpleTable
     Properties:
@@ -15,10 +48,3 @@ Resources:
       ProvisionedThroughput:
         ReadCapacityUnits: 1
         WriteCapacityUnits: 1
-Outputs:
-  SelectedValue:
-    Value: {"Fn::Select": [2, {"Fn::Split": ["-", {"Ref": "AWS::StackName"}]}]}
-  SplitValues:
-    Value: {"Fn::Split": ["-", {"Ref": "AWS::StackName"}]}
-
-
