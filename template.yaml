@@ -1,7 +1,7 @@
 AWSTemplateFormatVersion: "2010-09-09"
 Transform: AWS::Serverless-2016-10-31
 Parameters:
-  microservice1-stackname-and-environment:
+  microservice1StacknameAndEnvironment:
     Description: Name of the stack to import resources from, in this case microservice1-demo- + which environment (dev or prod)
     Type: String
     Default: !Join ["", ["microservice1-demo-", !Select [2, !Split ["-", !Ref "AWS::StackName"]]]]
@@ -16,13 +16,13 @@ Resources:
       DefinitionSubstitutions:
         StockCheckerFunctionArn: 
           Fn::ImportValue:
-            !Sub "${microservice1-stackname-and-environment}:StockCheckerFunctionArn"
+            !Sub "${microservice1StacknameAndEnvironment}:StockCheckerFunctionArn"
         StockSellerFunctionArn: 
           Fn::ImportValue:
-            !Sub "${microservice1-stackname-and-environment}:StockSellerFunctionArn"
+            !Sub "${microservice1StacknameAndEnvironment}:StockSellerFunctionArn"
         StockBuyerFunctionArn: 
           Fn::ImportValue:
-            !Sub "${microservice1-stackname-and-environment}:StockBuyerFunctionArn"
+            !Sub "${microservice1StacknameAndEnvironment}:StockBuyerFunctionArn"
         DDBPutItem: !Sub arn:${AWS::Partition}:states:::dynamodb:putItem
         DDBTable: !Ref TransactionTable
       Events:
