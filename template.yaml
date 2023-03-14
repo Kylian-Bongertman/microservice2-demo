@@ -1,11 +1,7 @@
 AWSTemplateFormatVersion: "2010-09-09"
 Transform: AWS::Serverless-2016-10-31
 
-Parameters:
-  microservice1StacknameAndEnvironment:
-    Description: Naam van de stack om resources van te importeren, in dit geval microservice1-demo- + welke omgeving (dev of prod)
-    Type: String
-    Default: !Join ["", ["microservice1-demo-", {"Fn::Select": [1, {"Fn::Split": ["-", {"Ref": "AWS::StackName"}]}]}]]
+
 
 Description: >
   Multi-step component 2
@@ -16,6 +12,9 @@ Resources:
     Properties:
       DefinitionUri: statemachine/stock_trader.asl.json
       DefinitionSubstitutions:
+        StockCheckerFunctionArn: !ImportValue !Sub "microservice1-demo-${Fn::Select [2, Fn::Split ['-', ${AWS::StackName}]]}:StockCheckerFunctionArn"
+
+          
         StockCheckerFunctionArn: !ImportValue "${microservice1StacknameAndEnvironment}:StockCheckerFunctionArn"
         StockSellerFunctionArn: !ImportValue "${microservice1StacknameAndEnvironment}:StockSellerFunctionArn"
         StockBuyerFunctionArn: !ImportValue "${microservice1StacknameAndEnvironment}:StockBuyerFunctionArn"
