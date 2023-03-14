@@ -12,10 +12,10 @@ Resources:
     Properties:
       DefinitionUri: statemachine/stock_trader.asl.json
       DefinitionSubstitutions:
-        StockCheckerFunctionArn: !ImportValue !Sub "microservice1-demo-${Fn::Select [2, Fn::Split ['-', ${AWS::StackName}]]}:StockCheckerFunctionArn"
+        StockCheckerFunctionArn: !ImportValue "microservice1-demo-${Fn::Select [2, Fn::Split ['-', ${AWS::StackName}]]}:StockCheckerFunctionArn"
 
           
-        StockCheckerFunctionArn: !ImportValue "${microservice1StacknameAndEnvironment}:StockCheckerFunctionArn"
+        
         StockSellerFunctionArn: !ImportValue "${microservice1StacknameAndEnvironment}:StockSellerFunctionArn"
         StockBuyerFunctionArn: !ImportValue "${microservice1StacknameAndEnvironment}:StockBuyerFunctionArn"
         DDBPutItem: !Sub "arn:${AWS::Partition}:states:::dynamodb:putItem"
