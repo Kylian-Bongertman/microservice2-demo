@@ -4,7 +4,7 @@ Parameters:
   microservice1StacknameAndEnvironment:
     Description: Name of the stack to import resources from, in this case microservice1-demo- + which environment (dev or prod)
     Type: String
-    Default: !Join ["", ["microservice1-demo-", !Select [2, !Split ["-", !Ref "AWS::StackName"]]]]
+    Default: !Join ["", ["microservice1-demo-", {"Fn::Select": [2, {"Fn::Split": ["-", {"Ref": "AWS::StackName"}]}]}]]
 Description: >
   multi-step component 2
 
