@@ -1,3 +1,5 @@
+AWSTemplateFormatVersion: "2010-09-09"
+Transform: AWS::Serverless-2016-10-31
 Parameters:
   microservice1StacknameAndEnvironment:
     Description: Name of the stack to import resources from, in this case microservice1-demo- + which environment (dev or prod)
@@ -9,3 +11,4 @@ Outputs:
     Value: {"Fn::Select": [2, {"Fn::Split": ["-", {"Ref": "AWS::StackName"}]}]}
   SplitValues:
     Value: {"Fn::Split": ["-", {"Ref": "AWS::StackName"}]}
+
