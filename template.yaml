@@ -5,10 +5,20 @@ Parameters:
     Description: Name of the stack to import resources from, in this case microservice1-demo- + which environment (dev or prod)
     Type: String
     Default: !Join ["", ["microservice1-demo-", {"Fn::Select": [2, {"Fn::Split": ["-", {"Ref": "AWS::StackName"}]}]}]]
-
+Resources:
+  TransactionTable:
+    Type: AWS::Serverless::SimpleTable
+    Properties:
+      PrimaryKey:
+        Name: Id
+        Type: String
+      ProvisionedThroughput:
+        ReadCapacityUnits: 1
+        WriteCapacityUnits: 1
 Outputs:
   SelectedValue:
     Value: {"Fn::Select": [2, {"Fn::Split": ["-", {"Ref": "AWS::StackName"}]}]}
   SplitValues:
     Value: {"Fn::Split": ["-", {"Ref": "AWS::StackName"}]}
+
 
