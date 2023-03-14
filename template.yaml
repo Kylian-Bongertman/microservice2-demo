@@ -1,56 +1,11 @@
-AWSTemplateFormatVersion: "2010-09-09"
-Transform: AWS::Serverless-2016-10-31
 Parameters:
   microservice1StacknameAndEnvironment:
     Description: Name of the stack to import resources from, in this case microservice1-demo- + which environment (dev or prod)
     Type: String
     Default: !Join ["", ["microservice1-demo-", {"Fn::Select": [2, {"Fn::Split": ["-", {"Ref": "AWS::StackName"}]}]}]]
-Description: >
-  multi-step component 2
 
-Resources:
-  StockTradingStateMachine:
-    Type: AWS::Serverless::StateMachine
-    Properties:
-      DefinitionUri: statemachine/stock_trader.asl.json
-      DefinitionSubstitutions:
-        StockCheckerFunctionArn: 
-          Fn::ImportValue:
-            !Sub "${microservice1StacknameAndEnvironment}:StockCheckerFunctionArn"
-        StockSellerFunctionArn: 
-          Fn::ImportValue:
-            !Sub "${microservice1StacknameAndEnvironment}:StockSellerFunctionArn"
-        StockBuyerFunctionArn: 
-          Fn::ImportValue:
-            !Sub "${microservice1StacknameAndEnvironment}:StockBuyerFunctionArn"
-        DDBPutItem: !Sub arn:${AWS::Partition}:states:::dynamodb:putItem
-        DDBTable: !Ref TransactionTable
-      Events:
-        HourlyTradingSchedule:
-          Type: Schedule
-          Properties:
-            Description: Schedule to run the stock trading state machine every hour
-            Enabled: False
-            Schedule: "rate(1 minute)"
-      Policies:
-        - Statement:
-            Effect: Allow
-            Action:
-              - lambda:InvokeFunction
-            Resource:
-              - !ImportValue StockCheckerFunctionArn
-              - !ImportValue StockSellerFunctionArn
-              - !ImportValue StockBuyerFunctionArn
-        - DynamoDBWritePolicy:
-            TableName: !Ref TransactionTable
-
-  TransactionTable:
-    Type: AWS::Serverless::SimpleTable
-    Properties:
-      PrimaryKey:
-        Name: Id
-        Type: String
-      ProvisionedThroughput:
-        ReadCapacityUnits: 1
-        WriteCapacityUnits: 1
-
+Outputs:
+  SelectedValue:
+    Value: {"Fn::Select": [2, {"Fn::Split": ["-", {"Ref": "AWS::StackName"}]}]}
+  SplitValues:
+    Value: {"Fn::Split": ["-", {"Ref": "AWS::StackName"}]}
