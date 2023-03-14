@@ -1,10 +1,10 @@
 AWSTemplateFormatVersion: "2010-09-09"
 Transform: AWS::Serverless-2016-10-31
 Parameters:
-  Environment:
-    Value: !Join ["", ["microservice1-demo-", !Select [2, !Split ["-", !Ref "AWS::StackName"]]]]
-    Export:
-      Name: microservice1-stackname-and-environment
+  microservice1-stackname-and-environment:
+    Description: Name of the stack to import resources from, in this case microservice1-demo- + which environment (dev or prod)
+    Type: String
+    Default: !Join ["", ["microservice1-demo-", !Select [2, !Split ["-", !Ref "AWS::StackName"]]]]
 Description: >
   multi-step component 2
 
