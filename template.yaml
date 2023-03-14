@@ -1,9 +1,10 @@
 AWSTemplateFormatVersion: "2010-09-09"
 Transform: AWS::Serverless-2016-10-31
 Parameters:
-  StackName:
-    Type: String
-    Default: AWS::StackName
+  Environment:
+    Value: !Join ["", ["microservice1-demo-", !Select [2, !Split ["-", !Ref "AWS::StackName"]]]]
+    Export:
+      Name: microservice1-stackname-and-environment
 Description: >
   multi-step component 2
 
@@ -15,13 +16,13 @@ Resources:
       DefinitionSubstitutions:
         StockCheckerFunctionArn: 
           Fn::ImportValue:
-            !Sub "${StackName}:StockCheckerFunctionArn"
+            !Sub "${microservice1-stackname-and-environment}:StockCheckerFunctionArn"
         StockSellerFunctionArn: 
           Fn::ImportValue:
-            !Sub "${StackName}:StockSellerFunctionArn"
+            !Sub "${microservice1-stackname-and-environment}:StockSellerFunctionArn"
         StockBuyerFunctionArn: 
           Fn::ImportValue:
-            !Sub "${StackName}:StockBuyerFunctionArn"
+            !Sub "${microservice1-stackname-and-environment}:StockBuyerFunctionArn"
         DDBPutItem: !Sub arn:${AWS::Partition}:states:::dynamodb:putItem
         DDBTable: !Ref TransactionTable
       Events:
