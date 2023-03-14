@@ -14,7 +14,7 @@ Resources:
       DefinitionSubstitutions:
         StockCheckerFunctionArn: !ImportValue "microservice1-demo-${Fn::Select [2, Fn::Split ['-', ${AWS::StackName}]]}:StockCheckerFunctionArn"
         StockSellerFunctionArn: !ImportValue "microservice1-demo-${Fn::Select [2, Fn::Split ['-', ${AWS::StackName}]]}:StockSellerFunctionArn"
-        StockBuyerFunctionArn: !ImportValue "microservice1-demo-${Fn::Select [2, Fn::Split ['-', ${AWS::StackName}]]}:StockBuyerFunctionArn"
+        #StockBuyerFunctionArn: !ImportValue "microservice1-demo-${Fn::Select [2, Fn::Split ['-', ${AWS::StackName}]]}:StockBuyerFunctionArn"
         DDBPutItem: !Sub "arn:${AWS::Partition}:states:::dynamodb:putItem"
         DDBTable: !Ref TransactionTable
       Events:
@@ -31,7 +31,7 @@ Resources:
             Resource:
               - StockCheckerFunctionArn: !ImportValue "microservice1-demo-${Fn::Select [2, Fn::Split ['-', ${AWS::StackName}]]}:StockCheckerFunctionArn"
               - StockSellerFunctionArn: !ImportValue "microservice1-demo-${Fn::Select [2, Fn::Split ['-', ${AWS::StackName}]]}:StockSellerFunctionArn"
-              - StockBuyerFunctionArn: !ImportValue "microservice1-demo-${Fn::Select [2, Fn::Split ['-', ${AWS::StackName}]]}:StockBuyerFunctionArn"
+              #- StockBuyerFunctionArn: !ImportValue "microservice1-demo-${Fn::Select [2, Fn::Split ['-', ${AWS::StackName}]]}:StockBuyerFunctionArn"
         - DynamoDBWritePolicy:
             TableName: !Ref TransactionTable
 
