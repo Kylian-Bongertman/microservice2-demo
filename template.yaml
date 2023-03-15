@@ -1,6 +1,8 @@
 AWSTemplateFormatVersion: "2010-09-09"
 Transform: AWS::Serverless-2016-10-31
 
+
+
 Description: >
   Multi-step component 2
 
@@ -23,23 +25,15 @@ Resources:
             Enabled: False
             Schedule: rate(1 minute)
       Policies:
-        - PolicyName: StockFunctionsPolicy
-          Statement:
-            - Effect: Allow
-              Action: lambda:InvokeFunction
-              Resource:
-                - !ImportValue "microservice1-demo-dev:StockCheckerFunctionArn"
-                - !ImportValue "microservice1-demo-dev:StockSellerFunctionArn"
-                - !ImportValue "microservice1-demo-dev:StockBuyerFunctionArn"
-        - PolicyName: DynamoDBWritePolicy
-          PolicyDocument:
-            Version: "2012-10-17"
-            Statement:
-              - Effect: Allow
-                Action:
-                  - dynamodb:PutItem
-                Resource:
-                  - !GetAtt TransactionTable.Arn
+        - Statement:
+            Effect: Allow
+            Action: lambda:InvokeFunction
+            Resource:
+              - StockCheckerFunctionArn: !ImportValue "microservice1-demo-dev:StockCheckerFunctionArn"
+              - StockSellerFunctionArn: !ImportValue "microservice1-demo-dev:StockSellerFunctionArn"
+              - StockBuyerFunctionArn: !ImportValue "microservice1-demo-dev:StockBuyerFunctionArn"
+        - DynamoDBWritePolicy:
+            TableName: !Ref TransactionTable
 
   TransactionTable:
     Type: AWS::Serverless::SimpleTable
