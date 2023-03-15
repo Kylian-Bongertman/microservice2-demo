@@ -9,7 +9,7 @@ Resources:
     Properties:
       DefinitionUri: statemachine/stock_trader.asl.json
       DefinitionSubstitutions:
-        StockCheckerFunctionArn: !ImportValue "microservice1-demo-${Fn::Select [2, Fn::Split ['-', ${AWS::StackName}]]}:StockCheckerFunctionArn"
+        StockCheckerFunctionArn: !ImportValue "microservice1-demo-${Fn::Select [2, Fn::Split ['-', ${AWS::StackName}]]}-dev:StockCheckerFunctionArn"
         StockSellerFunctionArn: !ImportValue "microservice1-demo-dev:StockSellerFunctionArn"
         StockBuyerFunctionArn: !ImportValue "microservice1-demo-dev:StockBuyerFunctionArn"
         DDBPutItem: !Sub "arn:${AWS::Partition}:states:::dynamodb:putItem"
@@ -27,7 +27,7 @@ Resources:
             Action:
               - lambda:InvokeFunction
             Resource:
-              - !ImportValue "microservice1-demo-${Fn::Select [2, Fn::Split ['-', ${AWS::StackName}]]}:StockCheckerFunctionArn"
+              - !ImportValue "microservice1-demo-${Fn::Select [2, Fn::Split ['-', ${AWS::StackName}]]}-dev:StockCheckerFunctionArn"
               - !ImportValue "microservice1-demo-dev:StockSellerFunctionArn"
               - !ImportValue "microservice1-demo-dev:StockBuyerFunctionArn"
         - DynamoDBWritePolicy:
