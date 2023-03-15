@@ -27,9 +27,9 @@ Resources:
             Action:
               - lambda:InvokeFunction
             Resource:
-              - !ImportValue StockCheckerFunctionArn
-              - !ImportValue StockSellerFunctionArn
-              - !ImportValue StockBuyerFunctionArn
+              - !ImportValue "microservice1-demo-dev:StockCheckerFunctionArn"
+              - !ImportValue "microservice1-demo-dev:StockSellerFunctionArn"
+              - !ImportValue "microservice1-demo-dev:StockBuyerFunctionArn"
         - DynamoDBWritePolicy:
             TableName: !Ref TransactionTable
 
