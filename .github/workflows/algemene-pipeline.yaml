@@ -3,7 +3,7 @@ name: Main Pipeline
 on:
   push:
     paths:
-      - '*'
+      - '**'
       - '!verkorte-sam-pipeline-templates/**'
   delete:
     branches:
