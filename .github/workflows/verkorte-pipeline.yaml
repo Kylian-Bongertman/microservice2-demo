@@ -3,7 +3,7 @@ name: verkorte pipeline
 on:
   push:
     paths:
-      - 'verkorte-sam-pipeline-templates**'
+      - 'verkorte-sam-pipeline-templates/**'
   delete:
     branches:
       - 'feature**'
