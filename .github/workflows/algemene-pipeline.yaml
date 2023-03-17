@@ -2,9 +2,8 @@ name: Pipeline
 
 on:
   push:
-    branches:
-      - 'main'
-      - 'feature**'
+    paths:
+      - '*'
       - '!nestedActionTest/**'
   delete:
     branches:
