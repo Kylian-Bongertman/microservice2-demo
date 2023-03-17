@@ -19,7 +19,7 @@ Resources:
           Type: Schedule
           Properties:
             Description: Schema om de stock trading state machine elk uur uit te voeren
-            Enabled: True
+            Enabled: False
             Schedule: rate(1 minute)
       Policies:
         - Statement:
