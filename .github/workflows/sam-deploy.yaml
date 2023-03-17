@@ -14,4 +14,11 @@ jobs:
       - name: Deploy SAM templates
         run: |
           cd nestedActionTest/nestedHelloWorld
-          sam deploy --template-file template.yaml --stack-name mystack --capabilities CAPABILITY_IAM --region=eu-west-1
+          sam deploy 
+            --stack-name mystack
+            --capabilities CAPABILITY_IAM
+            --region=eu-west-1
+            --template-file template.yaml
+            --s3-bucket aws-sam-cli-managed-dev-pipeline-artifactsbucket-1hbdo0jil045z
+            --role-arn arn:aws:iam::492917996281:role/aws-sam-cli-managed-dev-p-CloudFormationExecutionR-19T4NVO5DNV58
+          
