@@ -4,7 +4,7 @@ on:
   push:
     paths:
       - '*'
-      - '!nestedActionTest/**'
+      - '!subdir-sam-templates/**'
   delete:
     branches:
       - 'feature**'
