@@ -14,4 +14,4 @@ jobs:
       - name: Deploy SAM templates
         run: |
           cd nestedActionTest/nestedHelloWorld
-          sam deploy --template-file template.yaml --stack-name mystack --capabilities CAPABILITY_IAM --region=eu-west-1
+          sam deploy --template-file template.yaml --stack-name mystack --capabilities CAPABILITY_IAM
