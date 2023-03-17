@@ -5,6 +5,7 @@ on:
     branches:
       - 'main'
       - 'feature**'
+      - '!nestedActionTest/**'
   delete:
     branches:
       - 'feature**'
