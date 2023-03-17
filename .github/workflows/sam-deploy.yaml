@@ -2,7 +2,7 @@ name: My Workflow
 on:
   push:
     paths:
-      - 'nestedActionTest/nestedHelloWorld/**' # Path filter for triggering the workflow only on changes to files in the subdirectory
+      - 'subdir-sam-templates/HelloWorld-app/**' # Path filter for triggering the workflow only on changes to files in the subdirectory
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -28,7 +28,7 @@ jobs:
 
       - name: Deploy SAM templates
         run: |
-          cd nestedActionTest/nestedHelloWorld
+          cd subdir-sam-templates/HelloWorld-app
           sam deploy --stack-name mystack \
             --capabilities CAPABILITY_IAM \
             --region=eu-west-1 \
