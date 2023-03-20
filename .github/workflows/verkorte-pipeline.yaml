@@ -54,7 +54,7 @@ jobs:
             do
               base_stack_name=$(echo ${FEATURE_BRANCH_NAME##*/} | tr -cd '[a-zA-Z0-9-]')
               subfolder_name=$(echo $dir | sed 's:/$::' | sed 's:.*\/::' | tr '_' '-')
-              stack_name="${base_stack_name}-${subfolder_name}-app" # Voeg hier "-app" toe
+              stack_name="${base_stack_name}-${subfolder_name}"
               echo "Deleting stack: $stack_name"
               sam delete \
                 --stack-name $stack_name \

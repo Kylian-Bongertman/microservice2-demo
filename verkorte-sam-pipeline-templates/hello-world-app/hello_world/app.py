@@ -7,6 +7,6 @@ def lambda_handler(event, context):
     return {
         "statusCode": 200,
         "body": json.dumps({
-            "message": "hello world van verkorte pipeline!",
+            "message": "hello world van verkorte pipeline!..",
         }),
     }
