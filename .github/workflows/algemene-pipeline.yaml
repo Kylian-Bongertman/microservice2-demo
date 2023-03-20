@@ -46,16 +46,27 @@ jobs:
           role-duration-seconds: 3600
           role-skip-session-tagging: true
 
-      - name: Delete feature branch stack
+      - name: Delete feature branch stacks
         env:
           FEATURE_BRANCH_NAME: ${{ github.event.ref }}
         run: |
-          sam delete \
-            --stack-name $(echo ${FEATURE_BRANCH_NAME##*/} | tr -cd '[a-zA-Z0-9-]') \
-            --region ${TESTING_REGION} \
-            --no-prompts
+          for dir in alle-sam-templates/*/
+            do
+              base_stack_name=$(echo ${FEATURE_BRANCH_NAME##*/} | tr -cd '[a-zA-Z0-9-]')
+              subfolder_name=$(echo $dir | sed 's:/$::' | sed 's:.*\/::' | tr '_' '-')
+              stack_name="${base_stack_name}-${subfolder_name}"
+              echo "Deleting stack: $stack_name"
+              sam delete \
+                --stack-name $stack_name \
+                --region ${TESTING_REGION} \
+                --no-prompts
+            done
 
   build-and-deploy-feature:
+  # this stage is triggered only for feature branches (feature*),
+    # which will build the stack and deploy to a stack named with branch name.
+    # https://github.com/actions/setup-python
+    # https://github.com/aws-actions/configure-aws-credentials#notice-node12-deprecation-warning
     if: startsWith(github.ref, 'refs/heads/feature')
     needs: [test]
     runs-on: ubuntu-latest
@@ -77,12 +88,14 @@ jobs:
           role-skip-session-tagging: true
 
       - name: Deploy to feature stack in the testing account
+        env:
+          FEATURE_BRANCH_NAME: ${{ github.ref }}
         shell: bash
         run: |
           for dir in alle-sam-templates/*/
             do
               template_file=$(echo $dir | sed 's:/$::')/template.yaml
-              stack_name=$(echo $dir | sed 's:/$::' | sed 's:.*\/::' | tr '_' '-')
+              stack_name=$(echo ${FEATURE_BRANCH_NAME##*/} | tr -cd '[a-zA-Z0-9-]')-$(echo $dir | sed 's:/$::' | sed 's:.*\/::' | tr '_' '-')
               sam deploy \
                 --stack-name $stack_name \
                 --template-file $template_file \

@@ -62,7 +62,6 @@ jobs:
                 --no-prompts
             done
 
-
   build-and-deploy-feature:
   # this stage is triggered only for feature branches (feature*),
     # which will build the stack and deploy to a stack named with branch name.
@@ -124,7 +123,6 @@ jobs:
               template_file=$(echo $dir | sed 's:/$::')/template.yaml
               sam build --template $template_file --use-container
             done
-
 
       - name: Assume the testing pipeline user role
         uses: aws-actions/configure-aws-credentials@v1-node16
