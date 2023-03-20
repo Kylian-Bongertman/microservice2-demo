@@ -11,7 +11,6 @@ on:
 env:
   PIPELINE_USER_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
   PIPELINE_USER_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-  SAM_TEMPLATE: template.yaml
   TESTING_STACK_NAME: microservice2-demo-dev
   TESTING_PIPELINE_EXECUTION_ROLE: arn:aws:iam::492917996281:role/aws-sam-cli-managed-dev-pipe-PipelineExecutionRole-GZ7TGA2NKS0A
   TESTING_CLOUDFORMATION_EXECUTION_ROLE: arn:aws:iam::492917996281:role/aws-sam-cli-managed-dev-p-CloudFormationExecutionR-19T4NVO5DNV58
@@ -105,7 +104,12 @@ jobs:
           use-installer: true
 
       - name: Build resources
-        run: sam build --template ${SAM_TEMPLATE} --use-container
+        run: |
+          for dir in verkorte-sam-pipeline-templates/*/
+            do
+              template_file=$(echo $dir | sed 's:/$::')/template.yaml
+              sam build --template $template_file --use-container
+            done
 
       - name: Assume the testing pipeline user role
         uses: aws-actions/configure-aws-credentials@v1-node16
