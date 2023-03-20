@@ -1,0 +1,51 @@
+AWSTemplateFormatVersion: "2010-09-09"
+Transform: AWS::Serverless-2016-10-31
+Description: >
+  multi-step component 1
+  test 3-15-2023
+Resources:
+  StockCheckerFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: functions/stock_checker/
+      Handler: app.lambda_handler
+      Runtime: python3.9
+      Architectures:
+        - x86_64
+
+  StockSellerFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: functions/stock_seller/
+      Handler: app.lambda_handler
+      Runtime: python3.9
+      Architectures:
+        - x86_64
+
+  StockBuyerFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: functions/stock_buyer/
+      Handler: app.lambda_handler
+      Runtime: python3.9
+      Architectures:
+        - x86_64
+
+Outputs:
+  StockCheckerFunctionArn:
+    Description: "Stock Checker Function ARN"
+    Value: !GetAtt StockCheckerFunction.Arn
+    Export:
+      Name: !Join [ ":", [ !Ref "AWS::StackName", StockCheckerFunctionArn ] ]
+
+  StockSellerFunctionArn:
+    Description: "Stock Seller Function ARN"
+    Value: !GetAtt StockSellerFunction.Arn
+    Export:
+      Name: !Join [ ":", [ !Ref "AWS::StackName", StockSellerFunctionArn ] ]
+
+  StockBuyerFunctionArn:
+    Description: "Stock Buyer Function ARN"
+    Value: !GetAtt StockBuyerFunction.Arn
+    Export:
+      Name: !Join [ ":", [ !Ref "AWS::StackName", StockBuyerFunctionArn ] ]
