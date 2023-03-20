@@ -15,7 +15,7 @@ Resources:
         DDBPutItem: !Sub "arn:${AWS::Partition}:states:::dynamodb:putItem"
         DDBTable: !Ref TransactionTable
       Events:
-        HourlyTradingSchedule:
+        TradingSchedule:
           Type: Schedule
           Properties:
             Description: Schema om de stock trading state machine elk uur uit te voeren
