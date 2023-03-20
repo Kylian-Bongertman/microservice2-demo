@@ -118,7 +118,7 @@ jobs:
 
       - name: Build resources
         run: |
-          for dir in verkorte-sam-pipeline-templates/*/
+          for dir in alle-sam-templates/*/
             do
               template_file=$(echo $dir | sed 's:/$::')/template.yaml
               sam build --template $template_file --use-container
