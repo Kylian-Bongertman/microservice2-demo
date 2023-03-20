@@ -161,7 +161,7 @@ jobs:
 
       - name: Deploy to testing account
         run: |
-          for dir in alle-sam-templates/*/
+          for dir in microservice2-demo/verkorte-sam-pipeline-templates/*/
             do
               template_file=$(echo $dir | sed 's:/$::')/template.yaml
               stack_name=$(echo $dir | sed 's:/$::' | sed 's:.*\/::' | tr '_' '-')
@@ -173,7 +173,7 @@ jobs:
                 --s3-bucket ${TESTING_ARTIFACTS_BUCKET} \
                 --no-fail-on-empty-changeset \
                 --role-arn ${TESTING_CLOUDFORMATION_EXECUTION_ROLE}
-          done
+            done
 
   integration-test:
     if: github.ref == 'refs/heads/main'
