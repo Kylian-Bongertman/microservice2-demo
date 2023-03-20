@@ -62,6 +62,7 @@ jobs:
                 --region ${TESTING_REGION} \
                 --no-prompts
             done
+            
   #Job 3: This job is triggered when code is pushed to a feature branch, and builds and deploys any SAM stacks located in subdirectories under alle-sam-templates/.
   build-and-deploy-feature:
     if: startsWith(github.ref, 'refs/heads/feature')
