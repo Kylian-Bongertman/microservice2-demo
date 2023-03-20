@@ -17,7 +17,8 @@ env:
   TESTING_REGION: eu-west-1
 
 jobs:
-  test:
+  # Job 1: This job is triggered when code is pushed to a branch, and runs unit tests on the code.
+  run-unit-tests:
     if: github.event_name == 'push'
     runs-on: ubuntu-latest
     steps:
@@ -25,7 +26,8 @@ jobs:
       - run: |
           # trigger the tests here
 
-  delete-feature:
+   # Job 2: This job is triggered when a feature branch is deleted, and deletes any cloudformation stacks associated with that branch.
+  delete-feature: 
     if: startsWith(github.event.ref, 'feature') && github.event_name == 'delete'
     runs-on: ubuntu-latest
     steps:
@@ -61,13 +63,10 @@ jobs:
                 --no-prompts
             done
 
-  build-and-deploy-feature:
-  # this stage is triggered only for feature branches (feature*),
-    # which will build the stack and deploy to a stack named with branch name.
-    # https://github.com/actions/setup-python
-    # https://github.com/aws-actions/configure-aws-credentials#notice-node12-deprecation-warning
+  #Job 3: This job is triggered when code is pushed to a feature branch, and builds and deploys any SAM stacks located in subdirectories under alle-sam-templates/.
+  build-and-deploy-feature: 
     if: startsWith(github.ref, 'refs/heads/feature')
-    needs: [test]
+    needs: [run-unit-tests]
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
@@ -105,9 +104,10 @@ jobs:
                 --role-arn ${TESTING_CLOUDFORMATION_EXECUTION_ROLE}
             done
 
+  #Job 4: This job is triggered when code is pushed to the main branch, and builds the SAM resources and packages them as a single CloudFormation template.
   build-and-package:
     if: github.ref == 'refs/heads/main'
-    needs: [test]
+    needs: [run-unit-tests]
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
@@ -146,6 +146,7 @@ jobs:
           name: packaged-testing.yaml
           path: packaged-testing.yaml
 
+  #Job 5: This job is triggered when build-and-package job has completed, and deploys the packaged SAM resources to a testing environment.
   deploy-testing:
     if: github.ref == 'refs/heads/main'
     needs: [build-and-package]
@@ -186,6 +187,7 @@ jobs:
                 --role-arn ${TESTING_CLOUDFORMATION_EXECUTION_ROLE}
             done
 
+  #Job 6: This job is triggered when deploy-testing job has completed, and runs integration tests on the deployed SAM resources.
   integration-test:
     if: github.ref == 'refs/heads/main'
     needs: [deploy-testing]
