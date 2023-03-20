@@ -85,7 +85,7 @@ jobs:
       - name: Deploy to feature stack in the testing account
         shell: bash
         run: |
-          for dir in microservice2-demo/verkorte-sam-pipeline-templates/*/
+          for dir in verkorte-sam-pipeline-templates/*/
             do
               template_file=$(echo $dir | sed 's:/$::')/template.yaml
               stack_name=$(echo $dir | sed 's:/$::' | sed 's:.*\/::' | tr '_' '-')
@@ -161,7 +161,7 @@ jobs:
 
       - name: Deploy to testing account
         run: |
-          for dir in microservice2-demo/verkorte-sam-pipeline-templates/*/
+          for dir in verkorte-sam-pipeline-templates/*/
             do
               template_file=$(echo $dir | sed 's:/$::')/template.yaml
               stack_name=$(echo $dir | sed 's:/$::' | sed 's:.*\/::' | tr '_' '-')
