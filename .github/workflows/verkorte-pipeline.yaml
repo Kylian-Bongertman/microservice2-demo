@@ -58,7 +58,7 @@ jobs:
             --no-prompts
 
   build-and-deploy-feature:
-    # this stage is triggered only for feature branches (feature*),
+  # this stage is triggered only for feature branches (feature*),
     # which will build the stack and deploy to a stack named with branch name.
     # https://github.com/actions/setup-python
     # https://github.com/aws-actions/configure-aws-credentials#notice-node12-deprecation-warning
@@ -70,7 +70,6 @@ jobs:
       - uses: aws-actions/setup-sam@v2
         with:
           use-installer: true
-      - run: sam build --template ${SAM_TEMPLATE} --use-container
 
       - name: Assume the testing pipeline user role
         uses: aws-actions/configure-aws-credentials@v1-node16
@@ -86,7 +85,7 @@ jobs:
       - name: Deploy to feature stack in the testing account
         shell: bash
         run: |
-          for dir in alle-sam-templates/*/
+          for dir in microservice2-demo/verkorte-sam-pipeline-templates/*/
             do
               template_file=$(echo $dir | sed 's:/$::')/template.yaml
               stack_name=$(echo $dir | sed 's:/$::' | sed 's:.*\/::' | tr '_' '-')
