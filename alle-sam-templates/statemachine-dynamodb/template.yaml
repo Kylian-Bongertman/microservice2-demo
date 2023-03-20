@@ -9,9 +9,9 @@ Resources:
     Properties:
       DefinitionUri: statemachine/stock_trader.asl.json
       DefinitionSubstitutions:
-        StockCheckerFunctionArn: !ImportValue "microservice1-demo-dev:StockCheckerFunctionArn"
-        StockSellerFunctionArn: !ImportValue "microservice1-demo-dev:StockSellerFunctionArn"
-        StockBuyerFunctionArn: !ImportValue "microservice1-demo-dev:StockBuyerFunctionArn"
+        StockCheckerFunctionArn: !ImportValue "step-functions:StockCheckerFunctionArn"
+        StockSellerFunctionArn: !ImportValue "step-functions:StockSellerFunctionArn"
+        StockBuyerFunctionArn: !ImportValue "step-functions:StockBuyerFunctionArn"
         DDBPutItem: !Sub "arn:${AWS::Partition}:states:::dynamodb:putItem"
         DDBTable: !Ref TransactionTable
       Events:
@@ -19,7 +19,7 @@ Resources:
           Type: Schedule
           Properties:
             Description: Schema om de stock trading state machine elk uur uit te voeren
-            Enabled: False
+            Enabled: True
             Schedule: rate(1 minute)
       Policies:
         - Statement:
@@ -27,9 +27,9 @@ Resources:
             Action:
               - lambda:InvokeFunction
             Resource:
-              - !ImportValue "microservice1-demo-dev:StockCheckerFunctionArn"
-              - !ImportValue "microservice1-demo-dev:StockSellerFunctionArn"
-              - !ImportValue "microservice1-demo-dev:StockBuyerFunctionArn"
+              - !ImportValue "step-functions:StockCheckerFunctionArn"
+              - !ImportValue "step-functions:StockSellerFunctionArn"
+              - !ImportValue "step-functions:StockBuyerFunctionArn"
         - DynamoDBWritePolicy:
             TableName: !Ref TransactionTable
 
